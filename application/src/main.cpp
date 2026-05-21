@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
   auto &core = core::Core::Instance();
   core::Logger::Init();
   auto inputUpdateLayer = std::make_shared<input::InputUpdateLayer>();
+  core.PushLayer(inputUpdateLayer.get());
   VELOPRA_CORE_INFO("Starting Velopra Engine");
 
   auto windowManager = std::make_shared<ui::WindowManager>();
