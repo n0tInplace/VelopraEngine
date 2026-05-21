@@ -4,15 +4,20 @@
 #include "VE_InputAPI.h"
 #include "VE_InputTypes.h"
 #include "VE_Event.h"
+#include "VE_EventSubscriber.h"
 #include <unordered_map>
 #include <utility>
 
 namespace velopraEngine {
 namespace input {
 
-class VELOPRAINPUT_API InputEventGenerator {
+class VELOPRAINPUT_API InputEventGenerator : public core::EventSubscriber {
 public:
-  void Update(); // Called every frame to update input states
+  InputEventGenerator();
+  ~InputEventGenerator();
+
+  void Update();
+  void OnEvent(const core::Event &event) override;
 
   // Keyboard state methods
   bool IsKeyPressed(KeyCode key) const;
@@ -27,12 +32,14 @@ public:
 private:
   std::unordered_map<KeyCode, bool> keyStates;
   std::unordered_map<MouseCode, bool> mouseButtonStates;
-  float mouseX, mouseY;
+  float mouseX = 0.0f, mouseY = 0.0f;
 
-  // Methods to update internal state
   void UpdateKeyState(KeyCode key, bool pressed);
   void UpdateMouseButtonState(MouseCode button, bool pressed);
   void UpdateMousePosition(float x, float y);
+
+  static KeyCode TranslateKeyCode(int qtKey);
+  static MouseCode TranslateMouseCode(int qtButton);
 };
 
 } // namespace input

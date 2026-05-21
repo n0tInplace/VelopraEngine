@@ -1,4 +1,6 @@
 #include "VE_QtOpenGLWidget.h"
+#include "VE_Core.h"
+#include "VE_EventQueue.h"
 #include "VE_LoggerMacros.h"
 #include <QTimer>
 
@@ -14,8 +16,12 @@ QtOpenGLWidget::QtOpenGLWidget(QWidget *parent,
   renderer = std::make_shared<render::OpenGLRenderer>();
 
   QTimer *timer = new QTimer(this);
-  connect(timer, &QTimer::timeout, this,
-          QOverload<>::of(&QtOpenGLWidget::update));
+  connect(timer, &QTimer::timeout, this, [this]() {
+    core::EventQueue::Instance().ProcessEvents();
+    for (auto *layer : core::Core::Instance())
+      layer->OnUpdate();
+    update();
+  });
   timer->start(16); // approximately 60 fps
   VELOPRA_CORE_INFO("QT OpenGLWidget created");
 }
@@ -43,24 +49,23 @@ void QtOpenGLWidget::paintGL() {
 }
 
 void QtOpenGLWidget::keyPressEvent(QKeyEvent *event) {
-  if (windowManager) {
+  if (windowManager)
     windowManager->ForwardKeyPressedEvent(event);
-  }
-  // ... other key press handling
+}
+
+void QtOpenGLWidget::keyReleaseEvent(QKeyEvent *event) {
+  if (windowManager)
+    windowManager->ForwardKeyPressedEvent(event);
 }
 
 void QtOpenGLWidget::mousePressEvent(QMouseEvent *event) {
-  if (windowManager) {
+  if (windowManager)
     windowManager->ForwardMousePressedEvent(event);
-  }
-  // ... other mouse press handling
 }
 
 void QtOpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
-  if (windowManager) {
+  if (windowManager)
     windowManager->ForwardMouseMoveEvent(event);
-  }
-  // ... other mouse move handling
 }
 
 void QtOpenGLWidget::InitializeRenderer() { 
