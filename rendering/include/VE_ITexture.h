@@ -7,7 +7,8 @@ namespace render {
 class ITexture {
 public:
   virtual ~ITexture() = default;
-  // You can add common texture methods here, if needed
+  virtual void Bind(int slot) = 0;
+  virtual void Unbind() = 0;
 };
 
 } // namespace render

@@ -1,6 +1,7 @@
 #include "VE_QtOpenGLWidget.h"
 #include "VE_Core.h"
 #include "VE_LoggerMacros.h"
+#include "VE_SceneDescription.h"
 #include <QTimer>
 
 namespace velopraEngine {
@@ -30,7 +31,7 @@ QtOpenGLWidget::~QtOpenGLWidget() {}
 void QtOpenGLWidget::initializeGL() {
   initializeOpenGLFunctions();
   if (renderer) {
-    renderer->Initialize();
+    renderer->Initialize(render::SceneDescription{});
   }
 }
 
