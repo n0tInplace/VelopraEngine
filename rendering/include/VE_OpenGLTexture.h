@@ -18,6 +18,13 @@ public:
 
   GLuint GetTextureId() const { return textureId; }
 
+  void Bind(int slot) override {
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+  }
+
+  void Unbind() override { glBindTexture(GL_TEXTURE_2D, 0); }
+
 private:
   GLuint textureId;
 };

@@ -23,8 +23,11 @@ set(RENDERING_HEADER_FILES
     include/VE_IRenderer.h
     include/VE_IShader.h
     include/VE_ITexture.h
+    include/VE_ITextureLoader.h
     include/VE_ITransform.h
     include/VE_IWindowSizeObserver.h
+    include/VE_MeshData.h
+    include/VE_SceneDescription.h
     include/VE_OpenGLCamera.h
     include/VE_OpenGLMesh.h
     include/VE_OpenGLModel.h

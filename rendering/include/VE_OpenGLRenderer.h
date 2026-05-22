@@ -2,10 +2,11 @@
 #define VE_OPENGL_RENDERER_H
 
 #include "VE_ICamera.h"
-#include "VE_IRenderer.h"
-#include "VE_ITexture.h"
-#include "VE_IShader.h"
 #include "VE_IModel.h"
+#include "VE_IRenderer.h"
+#include "VE_IShader.h"
+#include "VE_ITexture.h"
+#include "VE_ITextureLoader.h"
 #include "VE_IWindowSizeObserver.h"
 #include "VE_RendererAPI.h"
 #include <GL/glew.h>
@@ -16,17 +17,19 @@
 namespace velopraEngine {
 namespace render {
 
-class VELOPRARENDERER_API OpenGLRenderer : public IWindowSizeObserver,
-                                           public IRenderer {
+class VELOPRARENDERER_API OpenGLRenderer : public IRenderer,
+                                           public IWindowSizeObserver,
+                                           public ITextureLoader {
 public:
   OpenGLRenderer();
   ~OpenGLRenderer() = default;
 
-  void Initialize() override;
+  void Initialize(const SceneDescription &scene) override;
   void BeginFrame() override;
   void RenderFrame() override;
-  std::shared_ptr<ITexture> LoadTexture(const std::string &filePath) override;
   void OnWindowSizeChanged(int width, int height) override;
+
+  std::shared_ptr<ITexture> LoadTexture(const std::string &filePath) override;
 
   void UpdateProjectionMatrix(int width, int height);
 
