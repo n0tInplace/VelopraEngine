@@ -5,8 +5,7 @@ project(VelopraCore)
 set(CORE_SOURCE_FILES
     src/VE_Core.cpp
     src/VE_Event.cpp
-    src/VE_EventBus.cpp
-    src/VE_EventQueue.cpp
+    src/VE_EventDispatcher.cpp
     src/VE_KeyboardEvent.cpp
     src/VE_Layer.cpp
     src/VE_LayerStack.cpp
@@ -21,8 +20,7 @@ set(CORE_HEADER_FILES
     include/VE_Core.h
     include/VE_CoreAPI.h
     include/VE_Event.h
-    include/VE_EventBus.h
-    include/VE_EventQueue.h
+    include/VE_EventDispatcher.h
     include/VE_EventSubscriber.h
     include/VE_KeyboardEvent.h
     include/VE_Layer.h

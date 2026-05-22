@@ -3,17 +3,12 @@
 namespace velopraEngine {
 namespace core {
 
-Core::Core()
-    : eventQueue(&EventQueue::Instance()), eventBus(&EventBus::Instance()) {}
-
 Core &Core::Instance() {
   static Core instance;
   return instance;
 }
 
-EventQueue *Core::GetEventQueue() { return eventQueue; }
-
-EventBus *Core::GetEventBus() { return eventBus; }
+EventDispatcher &Core::GetEventDispatcher() { return eventDispatcher; }
 
 void Core::PushLayer(Layer *layer) {
   layerStack.PushLayer(layer);
