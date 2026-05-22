@@ -1,6 +1,5 @@
 #include "VE_QtOpenGLWidget.h"
 #include "VE_Core.h"
-#include "VE_EventQueue.h"
 #include "VE_LoggerMacros.h"
 #include <QTimer>
 
@@ -17,7 +16,7 @@ QtOpenGLWidget::QtOpenGLWidget(QWidget *parent,
 
   QTimer *timer = new QTimer(this);
   connect(timer, &QTimer::timeout, this, [this]() {
-    core::EventQueue::Instance().ProcessEvents();
+    core::Core::Instance().GetEventDispatcher().ProcessEvents();
     for (auto *layer : core::Core::Instance())
       layer->OnUpdate();
     update();

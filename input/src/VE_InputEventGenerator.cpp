@@ -1,7 +1,6 @@
 #include "VE_InputEventGenerator.h"
 #include "VE_InputTypes.h"
 #include "VE_Core.h"
-#include "VE_EventQueue.h"
 #include "VE_KeyboardEvent.h"
 #include "VE_MouseEvent.h"
 
@@ -9,7 +8,7 @@ namespace velopraEngine {
 namespace input {
 
 InputEventGenerator::InputEventGenerator() {
-  auto &queue = core::EventQueue::Instance();
+  auto &queue = core::Core::Instance().GetEventDispatcher();
   queue.Subscribe(core::EventType::KeyPressed, this);
   queue.Subscribe(core::EventType::KeyReleased, this);
   queue.Subscribe(core::EventType::MouseButtonPressed, this);
@@ -18,7 +17,7 @@ InputEventGenerator::InputEventGenerator() {
 }
 
 InputEventGenerator::~InputEventGenerator() {
-  auto &queue = core::EventQueue::Instance();
+  auto &queue = core::Core::Instance().GetEventDispatcher();
   queue.Unsubscribe(core::EventType::KeyPressed, this);
   queue.Unsubscribe(core::EventType::KeyReleased, this);
   queue.Unsubscribe(core::EventType::MouseButtonPressed, this);

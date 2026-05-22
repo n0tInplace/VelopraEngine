@@ -28,7 +28,7 @@ void WindowManager::ForwardKeyPressedEvent(QKeyEvent *event) {
   }
 
   if (veEvent) {
-    core::Core::Instance().GetEventQueue()->PushEvent(veEvent);
+    core::Core::Instance().GetEventDispatcher().Post(veEvent);
   }
 }
 
@@ -36,7 +36,7 @@ void WindowManager::ForwardMouseMoveEvent(QMouseEvent *event) {
   auto veEvent =
       std::make_shared<core::MouseMovedEvent>(event->x(), event->y());
   VELOPRA_CORE_INFO("Mouse moved coords X:{} Y:{}", event->x(), event->y());
-  core::Core::Instance().GetEventQueue()->PushEvent(veEvent);
+  core::Core::Instance().GetEventDispatcher().Post(veEvent);
 }
 
 void WindowManager::ForwardMousePressedEvent(QMouseEvent *event) {
@@ -49,7 +49,7 @@ void WindowManager::ForwardMousePressedEvent(QMouseEvent *event) {
     VELOPRA_CORE_INFO("MouseReleased");
   }
   if (veEvent) {
-    core::Core::Instance().GetEventQueue()->PushEvent(veEvent);
+    core::Core::Instance().GetEventDispatcher().Post(veEvent);
   }
 }
 

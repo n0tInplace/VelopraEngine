@@ -2,11 +2,9 @@
 #define VE_CORE_H
 
 #include "VE_CoreAPI.h"
-#include "VE_EventBus.h"
-#include "VE_EventQueue.h"
+#include "VE_EventDispatcher.h"
 #include "VE_Layer.h"
 #include "VE_LayerStack.h"
-#include <chrono>
 
 namespace velopraEngine {
 namespace core {
@@ -15,8 +13,7 @@ class VELOPRACORE_API Core {
 public:
   static Core &Instance();
 
-  EventQueue *GetEventQueue();
-  EventBus *GetEventBus();
+  EventDispatcher &GetEventDispatcher();
 
   Core(const Core &) = delete;
   Core &operator=(const Core &) = delete;
@@ -30,9 +27,8 @@ public:
   LayerStack::reverse_iterator rend();
 
 private:
-  Core();
-  EventQueue *eventQueue;
-  EventBus *eventBus;
+  Core() = default;
+  EventDispatcher eventDispatcher;
   LayerStack layerStack;
 };
 
