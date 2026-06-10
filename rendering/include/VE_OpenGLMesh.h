@@ -2,21 +2,16 @@
 #define VE_OPENGLMESH_H
 
 #include "VE_IMesh.h"
+#include "VE_MeshData.h"
 #include <GL/glew.h>
 #include <vector>
 
 namespace velopraEngine {
 namespace render {
 
-struct GLMVertex {
-  glm::vec3 position;
-  glm::vec3 normal;
-  glm::vec2 texCoords;
-};
-
 class OpenGLMesh : public IMesh {
 public:
-  OpenGLMesh(const std::vector<GLMVertex> &vertices,
+  OpenGLMesh(const std::vector<Vertex> &vertices,
              const std::vector<GLuint> &indices);
   ~OpenGLMesh() override;
 
@@ -29,7 +24,7 @@ public:
   void Draw() const override;
 
 private:
-  std::vector<GLMVertex> vertices;
+  std::vector<Vertex> vertices;
   std::vector<GLuint> indices;
 
   GLuint VAO, VBO, EBO;
