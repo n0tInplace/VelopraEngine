@@ -7,7 +7,6 @@
 #include "VE_IShader.h"
 #include "VE_ITexture.h"
 #include "VE_ITextureLoader.h"
-#include "VE_IWindowSizeObserver.h"
 #include "VE_RendererAPI.h"
 #include <GL/glew.h>
 #include <memory>
@@ -18,7 +17,6 @@ namespace velopraEngine {
 namespace render {
 
 class VELOPRARENDERER_API OpenGLRenderer : public IRenderer,
-                                           public IWindowSizeObserver,
                                            public ITextureLoader {
 public:
   OpenGLRenderer();
