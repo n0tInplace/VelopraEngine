@@ -30,8 +30,10 @@ QtOpenGLWidget::~QtOpenGLWidget() {}
 
 void QtOpenGLWidget::initializeGL() {
   initializeOpenGLFunctions();
-  if (renderer) {
-    renderer->Initialize(render::SceneDescription{});
+  if (renderer && !renderer->Initialize(render::SceneDescription{})) {
+    VELOPRA_CORE_CRITICAL(
+        "Renderer initialization failed; rendering disabled.");
+    renderer.reset();
   }
 }
 

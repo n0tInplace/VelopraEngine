@@ -24,7 +24,7 @@ public:
   OpenGLRenderer();
   ~OpenGLRenderer() = default;
 
-  void Initialize(const SceneDescription &scene) override;
+  bool Initialize(const SceneDescription &scene) override;
   void BeginFrame() override;
   void RenderFrame() override;
   void OnWindowSizeChanged(int width, int height) override;
