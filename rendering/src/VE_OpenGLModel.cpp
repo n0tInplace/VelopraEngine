@@ -11,10 +11,14 @@ OpenGLModel::OpenGLModel(const std::vector<MeshData> &meshData,
     meshes.push_back(
         std::make_unique<OpenGLMesh>(data.vertices, data.indices));
 
-    for (const auto &path : data.diffuseTexturePaths)
-      textureLoader.LoadTexture(path);
-    for (const auto &path : data.specularTexturePaths)
-      textureLoader.LoadTexture(path);
+    for (const auto &path : data.diffuseTexturePaths) {
+      if (!textureLoader.LoadTexture(path))
+        VELOPRA_CORE_WARN("Diffuse texture failed to load: {}", path);
+    }
+    for (const auto &path : data.specularTexturePaths) {
+      if (!textureLoader.LoadTexture(path))
+        VELOPRA_CORE_WARN("Specular texture failed to load: {}", path);
+    }
   }
   VELOPRA_CORE_INFO("OpenGLModel created with {} meshes", meshes.size());
 }

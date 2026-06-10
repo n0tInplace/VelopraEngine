@@ -23,6 +23,9 @@ public:
 
   virtual bool ValidateProgram() = 0;
 
+  // False if shader sources failed to load, compile, or link.
+  virtual bool IsValid() const = 0;
+
   // Add more methods as needed
 };
 

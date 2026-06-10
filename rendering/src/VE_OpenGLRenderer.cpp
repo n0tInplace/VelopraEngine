@@ -98,25 +98,36 @@ OpenGLRenderer::OpenGLRenderer()
     : shader(nullptr), model(nullptr), camera(nullptr), aspectRatio(1.0f),
       projectionMatrix(1.0f) {}
 
-void OpenGLRenderer::Initialize(const SceneDescription &scene) {
+bool OpenGLRenderer::Initialize(const SceneDescription &scene) {
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
     VELOPRA_CORE_ERROR("Failed to initialize GLEW");
-    return;
+    return false;
   }
 
   camera = std::make_unique<OpenGLCamera>(scene.cameraPosition);
 
   ModelLoader loader;
   auto meshData = loader.Load(scene.modelPath);
+  if (meshData.empty()) {
+    VELOPRA_CORE_ERROR("No geometry loaded from model: {}", scene.modelPath);
+    return false;
+  }
   model = std::make_unique<OpenGLModel>(meshData, *this);
 
   shader = std::make_unique<OpenGLShader>(scene.vertexShaderPath,
                                           scene.fragmentShaderPath);
+  if (!shader->IsValid()) {
+    VELOPRA_CORE_ERROR("Shader setup failed: vertex: {}, fragment: {}",
+                       scene.vertexShaderPath, scene.fragmentShaderPath);
+    return false;
+  }
+
   model->GetTransform().SetPosition(scene.modelPosition);
 
   UpdateProjectionMatrix(scene.initialWidth, scene.initialHeight);
   VELOPRA_CORE_INFO("OpenGL Renderer initialized successfully.");
+  return true;
 }
 
 void OpenGLRenderer::BeginFrame() {

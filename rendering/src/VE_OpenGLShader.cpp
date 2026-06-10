@@ -5,23 +5,36 @@ namespace velopraEngine {
 namespace render {
 
 OpenGLShader::OpenGLShader(const std::string &vertexPath,
-                      const std::string &fragmentPath) {
+                           const std::string &fragmentPath)
+    : programID(0), valid(false) {
   std::string vertexSrc = ReadFile(vertexPath);
   std::string fragmentSrc = ReadFile(fragmentPath);
+  if (vertexSrc.empty() || fragmentSrc.empty()) {
+    VELOPRA_CORE_ERROR("Shader source missing: vertex: {}, fragment: {}",
+                       vertexPath, fragmentPath);
+    return;
+  }
 
-  // Compile shaders and link program
   GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexSrc);
   GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentSrc);
+  if (vertexShader == 0 || fragmentShader == 0) {
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    return;
+  }
 
-  // Create program and link shaders
   programID = glCreateProgram();
   glAttachShader(programID, vertexShader);
   glAttachShader(programID, fragmentShader);
   glLinkProgram(programID);
 
-  // Check for linking errors and clean up shaders
   GLint isLinked = 0;
   glGetProgramiv(programID, GL_LINK_STATUS, &isLinked);
+  glDetachShader(programID, vertexShader);
+  glDetachShader(programID, fragmentShader);
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+
   if (isLinked == GL_FALSE) {
     GLint maxLength = 0;
     glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
@@ -29,12 +42,12 @@ OpenGLShader::OpenGLShader(const std::string &vertexPath,
     glGetProgramInfoLog(programID, maxLength, &maxLength, &infoLog[0]);
     VELOPRA_CORE_ERROR("Shader link failure: {}", infoLog.data());
     glDeleteProgram(programID);
+    programID = 0;
+    return;
   }
-  glDetachShader(programID, vertexShader);
-  glDetachShader(programID, fragmentShader);
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-  VELOPRA_CORE_INFO("Compiling and linking shader: vertex: {}, fragment: {}",
+
+  valid = true;
+  VELOPRA_CORE_INFO("Compiled and linked shader: vertex: {}, fragment: {}",
                     vertexPath, fragmentPath);
 }
 
@@ -101,6 +114,8 @@ void OpenGLShader::SetUniformMat4f(const std::string &name,
                                    const core::Matrix4 &matrix) {
   glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 }
+
+bool OpenGLShader::IsValid() const { return valid; }
 
 bool OpenGLShader::ValidateProgram() {
   glValidateProgram(programID);

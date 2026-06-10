@@ -24,9 +24,11 @@ public:
                        const core::Matrix4 &matrix) override;
 
   bool ValidateProgram() override;
+  bool IsValid() const override;
 
 private:
   GLuint programID;
+  bool valid;
   mutable std::unordered_map<std::string, GLint> uniformLocationCache;
 
   GLuint CompileShader(unsigned int type, const std::string &source);
