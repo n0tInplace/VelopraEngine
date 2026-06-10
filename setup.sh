@@ -12,15 +12,14 @@ else
     echo "vcpkg already installed"
 fi
 
-echo "Installing dependencies"
+# Dependencies are declared in vcpkg.json (manifest mode) and are installed
+# automatically the first time you configure with CMake — no manual install
+# step needed:
+#
+#   cmake --preset macos-debug     (or linux-debug / x64-debug on Windows)
+#   cmake --build --preset macos-debug
+#
+# Note: the first configure compiles Qt and Assimp from source and can take
+# a while. Subsequent configures reuse vcpkg's binary cache and are fast.
 
-# List of dependencies
-dependencies=(opengl glew assimp glm qt5 spdlog)
-
-# Install each dependency one by one
-for dep in "${dependencies[@]}"; do
-    echo "Installing $dep..."
-    "$VCPKG_DIR/vcpkg" install "$dep"
-done
-
-echo "Setup completed successfully"
+echo "Setup completed. Configure with: cmake --preset <preset-name>"

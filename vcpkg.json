@@ -1,0 +1,11 @@
+{
+  "name": "velopra-engine",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "glew",
+    "assimp",
+    "glm",
+    "spdlog",
+    "qt5-base"
+  ]
+}

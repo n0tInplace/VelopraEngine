@@ -22,14 +22,11 @@ IF NOT EXIST "%VCPKG_DIR%" (
     echo vcpkg already installed
 )
 
-echo Installing dependencies
-powershell -File "%PROJECT_DIR%install_dependencies.ps1" "%VCPKG_DIR%"
+REM Dependencies are declared in vcpkg.json (manifest mode) and are installed
+REM automatically the first time you configure with CMake:
+REM
+REM   cmake --preset x64-debug
+REM   cmake --build --preset x64-debug
 
-IF %ERRORLEVEL% NEQ 0 (
-    echo Failed to install dependencies
-    exit /b %ERRORLEVEL%
-)
-
-echo Dependencies installed successfully
-echo Setup completed successfully
+echo Setup completed. Configure with: cmake --preset x64-debug
 ENDLOCAL
