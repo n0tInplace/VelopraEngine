@@ -1,4 +1,5 @@
 #include "VE_OpenGLMesh.h"
+#include "VE_LoggerMacros.h"
 #include "VE_pch.h"
 
 namespace velopraEngine {

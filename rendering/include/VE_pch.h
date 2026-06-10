@@ -20,12 +20,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-// ... any other standard library headers ...
 
-// Internal headers
-// Include any internal headers that are used across multiple files
-#include "VE_Core.h"
-#include "VE_LoggerMacros.h"
-#include "VE_Math.h"
+// The PCH carries external libraries only. Internal engine headers are
+// included explicitly by the files that use them, so include lists state
+// each file's real dependencies.
 
 #endif // VE_RENDERING_PCH_H

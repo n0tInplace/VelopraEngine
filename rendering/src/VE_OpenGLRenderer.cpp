@@ -7,6 +7,7 @@
 #include "VE_OpenGLModel.h"
 #include "VE_OpenGLTexture.h"
 #include "VE_OpenGlShader.h"
+#include "VE_LoggerMacros.h"
 #include "VE_pch.h"
 #include "stb_image.h"
 
