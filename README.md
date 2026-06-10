@@ -13,53 +13,52 @@ The Velopra Engine is a versatile game engine designed for developing both 2D an
 
 ## Core Features
 
-- **Vector2, Vector3, Matrix4, and Quaternion Structures**: Efficient mathematical computations for 2D/3D graphics and physics.
-- **Optimized Arithmetic Operations**: High-performance operations for vectors, matrices, and quaternions, crucial for performance-critical applications.
-- **Memory Management Utilities**: Robust tools for dynamic allocation, deallocation, and aligned memory operations, ensuring efficient resource management.
-- **Integrated Logging System**: Streamlined error reporting and debugging, utilizing spdlog for efficient and flexible logging.
-- **Rendering Module**: Advanced module supporting shader management, mesh processing, texture handling, and more, using OpenGL. Future plans include support for Vulkan, Metal, and DirectX to cater to a wider range of platforms and performance needs.
-- **Qt for UI Development**: Utilizes Qt for creating sophisticated and responsive user interfaces, seamlessly integrated with the core engine for in-game and tool UIs.
-- **Platform Agnostic Design**: Engineered to be cross-platform, ensuring compatibility with various operating systems and hardware configurations. This design philosophy extends to all aspects of the engine, from core functionalities to UI elements.
+- **GLM-based Math Foundation**: Engine math (`core::Vector2/Vector3/Matrix4/Quaternion`) is built on [GLM](https://github.com/g-truc/glm) — one shared, backend-neutral math currency across all modules.
+- **Unified Event System**: A single `EventDispatcher` with queued per-frame dispatch (`Post` + `ProcessEvents`), synchronous dispatch (`PostImmediate`), and both pointer-based (`EventSubscriber`) and RAII token-based callback subscriptions.
+- **Integrated Logging System**: Streamlined error reporting and debugging via spdlog, with engine-wide logging macros.
+- **Rendering Module**: OpenGL renderer behind narrow backend seams (`IRenderer`, `ITextureLoader`, `IModel`, `IMesh`, `IShader`, `ICamera`, `ITransform`), designed for future Vulkan, Metal, and DirectX backends.
+- **Qt for UI Development**: Qt-based main window and render surface, with the renderer injected behind `IRenderer` so the UI never depends on a concrete backend.
+- **Platform Agnostic Design**: Cross-platform CMake presets and vcpkg manifest-mode dependencies for Windows, macOS, and Linux.
 
 ## Core Components
 
 ### Core Module (VelopraCore)
 - Central part of the engine, handling core functionalities.
-- Singleton Core class for managing the engine's main operations.
-- Manages event queue and event bus for event handling and dispatching.
-- Implements VE_Logger for logging, utilizing spdlog for efficient logging.
-- Handles dynamic linking with spdlog to avoid duplicate linking issues.
-- Added Time class for delta time calculations and frame time management.
+- Singleton `Core` class exposing the `EventDispatcher` and the `LayerStack`.
+- Layers (`Layer`/`LayerStack`) are per-frame update units ticked by the main loop after events are dispatched.
+- `VE_Logger` for logging, utilizing spdlog.
+- `Time` class for delta time calculations and frame time management.
 
 ### Rendering Module (VelopraRenderer)
-- Manages rendering-related tasks using OpenGL.
-- Interacts with external libraries like GLEW, GLFW, Assimp, and glm.
-- Resolved initial linking issues with spdlog through dynamic linking in the Core module.
+- OpenGL renderer implementing `IRenderer` and `ITextureLoader`.
+- Scene assets (model, shaders, camera placement) are described by a `SceneDescription` passed to `IRenderer::Initialize`, which reports failure instead of rendering in an undefined state.
+- Model loading via Assimp is fully contained in a `ModelLoader` that produces backend-agnostic `MeshData`/`Vertex` geometry.
+- External libraries: GLEW, Assimp, GLM, stb_image.
 
 ### Input System Module (VelopraInputSystem)
-- Handles input events and processing.
-- Integrated with the Core module for event handling.
-- Contains InputUpdateLayer for updating input states.
-- Development and integration are ongoing.
+- `InputEventGenerator` subscribes to the `EventDispatcher` and tracks key/mouse state; query with `IsKeyPressed`/`IsMouseButtonPressed`/`GetMousePosition`.
+- Translates Qt key/mouse codes to engine `KeyCode`/`MouseCode` values.
+- `InputUpdateLayer` plugs input updates into the engine's `LayerStack`.
 
 ### UI Module (VelopraUI)
-- Utilizes Qt for creating and managing user interfaces.
-- Integrated with the Core and Rendering modules for seamless UI interaction within games.
-- Provides tools for developing in-game menus, editors, and custom user interfaces.
+- Qt main window with a render surface behind the `IRenderWidget` seam.
+- `RenderWidgetFactory` is the single place that knows concrete backends: it creates the renderer for the requested `RenderType` and injects it.
+- `WindowManager` converts Qt input events to engine events and posts them to the `EventDispatcher`.
 
 ### Application Module
-- The executable part of the engine, where main application logic resides.
-- Initializes and ties together other modules (Core, Renderer, Input System, UI...).
-- Implements the main loop, managing rendering, input processing, and UI interactions.
+- The executable: initializes Core, pushes the input layer, and starts the Qt-driven main loop (events → layer updates → render, ~60 FPS).
 
 ## Event Handling
-- Event bus and event queue systems for efficient event handling.
-- Events are dispatched and processed through these systems for a modular and decoupled architecture.
+- One `EventDispatcher` for the whole engine: events are queued with `Post` and dispatched once per frame by `ProcessEvents`; `PostImmediate` is available for time-sensitive synchronous dispatch.
+- Subscribe long-lived systems via the `EventSubscriber` interface, or ad-hoc listeners via callbacks with auto-unsubscribing RAII tokens.
 
 ## Logging System
 - Utilizes spdlog for logging, integrated into the Core module.
 - Offers various logging levels (trace, info, warn, error, critical).
 - Macros for easy logging throughout the engine.
+
+## Architecture Notes
+- `CONTEXT.md` records the engine's domain vocabulary and load-bearing decisions (multi-backend constraint, GLM math foundation, projection-behind-the-seam rule).
 
 ## Asset Management Module (Planned)
 - Future plans to include an asset management module for handling game assets (textures, models, audio files, scripts).
@@ -68,14 +67,13 @@ The Velopra Engine is a versatile game engine designed for developing both 2D an
 ## Future Enhancements
 - Integration of **physics**, **audio**, and advanced input handling.
 - Expansion of the rendering module for more graphics features.
-- Implementing a user interface and editor tools.
-- **Support for Multiple Rendering Libraries**: Plans to include support for Vulkan, Metal, and DirectX, enabling developers to leverage the engine's capabilities across different graphics APIs and platforms.
-- **Expansion of Platform Support**: Continuous efforts to ensure the engine runs efficiently on various platforms, maintaining its platform-agnostic nature.
+- Editor tooling built on the Qt UI module.
+- **Support for Multiple Rendering Backends**: Vulkan, Metal, and DirectX renderers behind the existing `IRenderer` seam.
 
 ## Development Environment
 - Developed with C++ (C++20 standard).
-- Uses CMake for build automation and cross-platform compilation.
-- Utilizes Microsoft Visual Studio and vcpkg for package management.
+- CMake with cross-platform presets (`CMakePresets.json`) for Windows, macOS, and Linux.
+- Dependencies managed by vcpkg in manifest mode (`vcpkg.json`).
 
 ## Getting Started
 
@@ -87,49 +85,40 @@ Before starting, ensure you have:
 
 ### Setting Up Dependencies
 
-The Velopra Engine uses several dependencies, including `spdlog` for logging, `GLEW` for OpenGL extension wrangling, `GLM` for mathematics, `Assimp` for model loading, and `Qt5` for the UI. The setup process will automatically handle the installation of these dependencies using vcpkg.
-
-To set up your environment for the Velopra Engine, follow these steps:
+Dependencies (`spdlog`, `GLEW`, `GLM`, `Assimp`, `Qt5`) are declared in `vcpkg.json` and installed automatically by vcpkg manifest mode the first time you configure with CMake — the setup script only bootstraps vcpkg itself.
 
 1. Clone the Velopra Engine repository:
    ```bash
    git clone https://github.com/AlexHikari/VelopraEngine.git
-    ```
-2. Navigate to the cloned directory:
-   ```bash
    cd VelopraEngine
    ```
-3. Run the setup script:
-    - On Windows:
+2. Run the setup script:
+   - On Windows:
    ```bash
    setup.bat
    ```
-   - On Unix-based systems:
+   - On macOS/Linux:
    ```bash
    sh setup.sh
    ```
-This script will automatically download and install vcpkg locally in your project directory and use it to install the necessary dependencies.
 
 ### Building the Project
 
-The Velopra Engine uses `CMakePresets.json` to define build configurations. To build the project using these presets, follow these steps:
+Configure and build with the preset for your platform:
 
-1. Navigate to the project's root directory (where `CMakePresets.json` is located).
-2. To configure the project using a specific preset, run:
-   ```bash
-   cmake --preset <preset-name>
-   ```
-   Replace <preset-name> with the desired preset name, such as x64-debug or x64-release.
-3. To build the project using the configured preset, run:
-   ```bash
-   cmake --build --preset <preset-name>
-   ```
-   For example, to build the project with the x64-debug preset, you would run:
-   ```bash
-   cmake --preset x64-debug
-   cmake --build --preset x64-debug
-   ```
-This ensures that the build process is consistent with the configurations defined in Visual Studio, allowing for a more unified development experience across different platforms and environments.
+| Platform | Configure | Build |
+|---|---|---|
+| Windows | `cmake --preset x64-debug` | `cmake --build --preset x64-debug` |
+| macOS | `cmake --preset macos-debug` | `cmake --build --preset macos-debug` |
+| Linux | `cmake --preset linux-debug` | `cmake --build --preset linux-debug` |
+
+Each platform also has a `-release` variant. The first configure compiles Qt and Assimp from source via vcpkg and can take a while; later configures reuse vcpkg's binary cache.
+
+**Note for macOS:** make sure CMake and a compiler toolchain are available (`xcode-select --install`, and `brew install cmake` if needed).
+
+**Note for Linux:** building Qt through vcpkg requires X11 development headers. On Debian/Ubuntu: `sudo apt install build-essential cmake libgl1-mesa-dev libxi-dev libxext-dev libx11-dev libxrandr-dev libxrender-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libfreetype6-dev`.
+
+**Note for Windows:** Visual Studio 2022 with the "Desktop development with C++" workload is required (the presets use its generator).
 
 ## Contributing
 
