@@ -364,3 +364,8 @@ FodyWeavers.xsd
 
 #vcpkg local installation
 /vcpkg/
+# macOS
+.DS_Store
+
+# CMake user-local presets
+CMakeUserPresets.json
