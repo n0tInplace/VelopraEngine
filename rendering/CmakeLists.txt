@@ -13,7 +13,6 @@ set(RENDERING_SOURCE_FILES
     src/VE_OpenGLShader.cpp
     src/VE_OpenGLTransform.cpp
     src/VE_pch.cpp
-    src/VE_RenderUtils.cpp
 )
 set(RENDERING_HEADER_FILES
     include/stb_image.h
@@ -37,7 +36,6 @@ set(RENDERING_HEADER_FILES
     include/VE_OpenGLTransform.h
     include/VE_pch.h
     include/VE_RendererAPI.h
-    include/VE_RenderUtils.h
 )
 
 # Create the Renderer library

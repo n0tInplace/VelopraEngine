@@ -10,7 +10,6 @@ set(CORE_SOURCE_FILES
     src/VE_Layer.cpp
     src/VE_LayerStack.cpp
     src/VE_Logger.cpp
-    src/VE_Math.cpp
     src/VE_Memory.cpp
     src/VE_MouseEvent.cpp
     src/VE_Utility.cpp
@@ -38,6 +37,7 @@ set(CORE_HEADER_FILES
 
 # Add library target for the Core module with the collected source files
 find_package(spdlog REQUIRED)
+find_package(glm REQUIRED)
 add_library(VelopraCore ${CORE_SOURCE_FILES} ${CORE_HEADER_FILES})
 
 # Define BUILDING_VELOPRACORE_DLL when building as a shared library
@@ -45,6 +45,6 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(VelopraCore PRIVATE BUILDING_VELOPRACORE_DLL)
 endif()
 
-target_link_libraries(VelopraCore PUBLIC spdlog::spdlog)
+target_link_libraries(VelopraCore PUBLIC spdlog::spdlog glm::glm)
 target_include_directories(VelopraCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

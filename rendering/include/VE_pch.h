@@ -27,6 +27,5 @@
 #include "VE_Core.h"
 #include "VE_LoggerMacros.h"
 #include "VE_Math.h"
-#include "VE_RenderUtils.h"
 
 #endif // VE_RENDERING_PCH_H

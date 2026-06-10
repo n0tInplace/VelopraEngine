@@ -1,5 +1,4 @@
 #include "VE_OpenGLCamera.h"
-#include "VE_RenderUtils.h"
 
 namespace velopraEngine {
 namespace render {
@@ -16,7 +15,7 @@ OpenGLCamera::OpenGLCamera(glm::vec3 position, glm::vec3 up, float yaw,
 }
 
 core::Matrix4 OpenGLCamera::GetViewMatrix() {
-  return core::Matrix4(ConvertFromGLMMat4(glm::lookAt(Position, Position + Front, Up)));
+  return glm::lookAt(Position, Position + Front, Up);
 }
 
 void OpenGLCamera::ProcessKeyboard(Camera_Movement direction, float deltaTime) {

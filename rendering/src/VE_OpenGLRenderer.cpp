@@ -7,7 +7,6 @@
 #include "VE_OpenGLModel.h"
 #include "VE_OpenGLTexture.h"
 #include "VE_OpenGlShader.h"
-#include "VE_RenderUtils.h"
 #include "VE_pch.h"
 #include "stb_image.h"
 
@@ -51,7 +50,7 @@ private:
     velopraEngine::render::MeshData data;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-      velopraEngine::render::GLMVertex v;
+      velopraEngine::render::Vertex v;
       v.position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
                     mesh->mVertices[i].z};
       if (mesh->HasNormals())
@@ -96,10 +95,8 @@ namespace velopraEngine {
 namespace render {
 
 OpenGLRenderer::OpenGLRenderer()
-    : shader(nullptr), model(nullptr), camera(nullptr), aspectRatio(0.0f) {
-  projectionMatrix =
-      core::Matrix4::Perspective(45.0f, aspectRatio, 0.1f, 100.0f);
-}
+    : shader(nullptr), model(nullptr), camera(nullptr), aspectRatio(1.0f),
+      projectionMatrix(1.0f) {}
 
 void OpenGLRenderer::Initialize(const SceneDescription &scene) {
   glewExperimental = GL_TRUE;
@@ -108,8 +105,7 @@ void OpenGLRenderer::Initialize(const SceneDescription &scene) {
     return;
   }
 
-  camera = std::make_unique<OpenGLCamera>(
-      RenderUtils::ConvertToGLMVec3(scene.cameraPosition));
+  camera = std::make_unique<OpenGLCamera>(scene.cameraPosition);
 
   ModelLoader loader;
   auto meshData = loader.Load(scene.modelPath);
@@ -193,8 +189,10 @@ void OpenGLRenderer::OnWindowSizeChanged(int width, int height) {
 
 void OpenGLRenderer::UpdateProjectionMatrix(int width, int height) {
   aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-  projectionMatrix = core::Matrix4::Perspective(glm::radians(90.0f),
-                                                aspectRatio, 0.1f, 100.0f);
+  // Projection conventions are backend-specific (GL clip depth is [-1,1]),
+  // so each renderer builds its own projection behind its seam.
+  projectionMatrix =
+      glm::perspective(glm::radians(90.0f), aspectRatio, 0.1f, 100.0f);
   glViewport(0, 0, width, height);
 }
 

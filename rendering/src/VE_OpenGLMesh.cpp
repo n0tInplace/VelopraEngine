@@ -4,7 +4,7 @@
 namespace velopraEngine {
 namespace render {
 
-OpenGLMesh::OpenGLMesh(const std::vector<GLMVertex> &vertices,
+OpenGLMesh::OpenGLMesh(const std::vector<Vertex> &vertices,
                        const std::vector<GLuint> &indices)
     : vertices(vertices), indices(indices) {
   SetupMesh();
@@ -58,7 +58,7 @@ void OpenGLMesh::SetupMesh() {
 
   // Load data into vertex buffer
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLMVertex),
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
                vertices.data(), GL_STATIC_DRAW);
 
   // Load data into element buffer
@@ -69,17 +69,17 @@ void OpenGLMesh::SetupMesh() {
   // Set the vertex attribute pointers
   // Vertex Positions
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLMVertex), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
 
   // Vertex Normals
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLMVertex),
-                        (void *)offsetof(GLMVertex, normal));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        (void *)offsetof(Vertex, normal));
 
   // Vertex Texture Coords
   glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GLMVertex),
-                        (void *)offsetof(GLMVertex, texCoords));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        (void *)offsetof(Vertex, texCoords));
 
   glBindVertexArray(0); // Unbind VAO
 

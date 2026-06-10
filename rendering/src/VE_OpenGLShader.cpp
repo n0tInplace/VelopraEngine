@@ -99,8 +99,7 @@ std::string OpenGLShader::ReadFile(const std::string &filepath) {
 
 void OpenGLShader::SetUniformMat4f(const std::string &name,
                                    const core::Matrix4 &matrix) {
-  glm::mat4 glmMatrix = ConvertToGLMMat4(matrix);
-  glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &glmMatrix[0][0]);
+  glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 }
 
 bool OpenGLShader::ValidateProgram() {
