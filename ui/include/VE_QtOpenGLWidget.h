@@ -2,7 +2,7 @@
 #define VE_QT_OPENGL_WIDGET_H
 
 #include "VE_IRenderWidget.h"
-#include "VE_OpenGLRenderer.h"
+#include "VE_IRenderer.h"
 #include "VE_UIApi.h"
 #include "VE_WindowManager.h"
 #include <QOpenGLFunctions>
@@ -18,7 +18,8 @@ class VELOPRAUI_API QtOpenGLWidget : public QOpenGLWidget,
   Q_OBJECT
 
 public:
-  QtOpenGLWidget(QWidget *parent = nullptr,
+  QtOpenGLWidget(std::shared_ptr<render::IRenderer> renderer,
+                 QWidget *parent = nullptr,
                  std::shared_ptr<WindowManager> windowManager = nullptr);
   ~QtOpenGLWidget();
 
@@ -37,7 +38,7 @@ protected:
   void paintGL() override;
 
 private:
-  std::shared_ptr<render::OpenGLRenderer> renderer;
+  std::shared_ptr<render::IRenderer> renderer;
   std::shared_ptr<WindowManager> windowManager;
 };
 

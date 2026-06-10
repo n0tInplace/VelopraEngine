@@ -7,13 +7,13 @@
 namespace velopraEngine {
 namespace ui {
 
-QtOpenGLWidget::QtOpenGLWidget(QWidget *parent,
+QtOpenGLWidget::QtOpenGLWidget(std::shared_ptr<render::IRenderer> renderer,
+                               QWidget *parent,
                                std::shared_ptr<WindowManager> windowManager)
-    : QOpenGLWidget(parent), windowManager(windowManager) {
+    : QOpenGLWidget(parent), renderer(std::move(renderer)),
+      windowManager(windowManager) {
 
-  QOpenGLWidget::setMouseTracking(
-      true); // This directly calls QOpenGLWidget's setMouseTracking
-  renderer = std::make_shared<render::OpenGLRenderer>();
+  QOpenGLWidget::setMouseTracking(true);
 
   QTimer *timer = new QTimer(this);
   connect(timer, &QTimer::timeout, this, [this]() {
@@ -28,8 +28,10 @@ QtOpenGLWidget::QtOpenGLWidget(QWidget *parent,
 
 QtOpenGLWidget::~QtOpenGLWidget() {}
 
-void QtOpenGLWidget::initializeGL() {
-  initializeOpenGLFunctions();
+// IRenderWidget — the render-surface lifecycle. Qt callbacks delegate here so
+// the interface carries the real behaviour.
+
+void QtOpenGLWidget::InitializeRenderer() {
   if (renderer && !renderer->Initialize(render::SceneDescription{})) {
     VELOPRA_CORE_CRITICAL(
         "Renderer initialization failed; rendering disabled.");
@@ -37,18 +39,29 @@ void QtOpenGLWidget::initializeGL() {
   }
 }
 
-void QtOpenGLWidget::resizeGL(int w, int h) {
+void QtOpenGLWidget::ResizeRenderer(int width, int height) {
   if (renderer) {
-    renderer->OnWindowSizeChanged(w, h);
+    renderer->OnWindowSizeChanged(width, height);
   }
 }
 
-void QtOpenGLWidget::paintGL() {
+void QtOpenGLWidget::Render() {
   if (renderer) {
     renderer->BeginFrame();
     renderer->RenderFrame();
   }
 }
+
+// Qt lifecycle — delegates to the IRenderWidget seam.
+
+void QtOpenGLWidget::initializeGL() {
+  initializeOpenGLFunctions();
+  InitializeRenderer();
+}
+
+void QtOpenGLWidget::resizeGL(int w, int h) { ResizeRenderer(w, h); }
+
+void QtOpenGLWidget::paintGL() { Render(); }
 
 void QtOpenGLWidget::keyPressEvent(QKeyEvent *event) {
   if (windowManager)
@@ -68,18 +81,6 @@ void QtOpenGLWidget::mousePressEvent(QMouseEvent *event) {
 void QtOpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
   if (windowManager)
     windowManager->ForwardMouseMoveEvent(event);
-}
-
-void QtOpenGLWidget::InitializeRenderer() { 
-    //nothing to initialize here
-}
-
-void QtOpenGLWidget::ResizeRenderer(int width, int height) {
-  resizeGL(width, height);
-}
-
-void QtOpenGLWidget::Render() { 
-////nothing to render here
 }
 
 } // namespace ui

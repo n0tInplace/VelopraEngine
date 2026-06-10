@@ -23,8 +23,6 @@ private:
   std::unique_ptr<IRenderWidget> renderWidget;
   QDockWidget *rightDockWidget;
   QDockWidget *leftDockWidget;
-
-  bool eventFilter(QObject *object, QEvent *event);
 };
 
 } // namespace ui

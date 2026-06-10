@@ -24,7 +24,6 @@ set(RENDERING_HEADER_FILES
     include/VE_ITexture.h
     include/VE_ITextureLoader.h
     include/VE_ITransform.h
-    include/VE_IWindowSizeObserver.h
     include/VE_MeshData.h
     include/VE_SceneDescription.h
     include/VE_OpenGLCamera.h

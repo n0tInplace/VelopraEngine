@@ -31,13 +31,8 @@ MainWindow::MainWindow(QWidget *parent,
       new QLabel("Right Panel Content", rightDockWidget));
   addDockWidget(Qt::RightDockWidgetArea, rightDockWidget);
 
-  this->installEventFilter(this);
   showMaximized();
   VELOPRA_CORE_INFO("QT Main window created");
-}
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
-  return QMainWindow::eventFilter(obj, event);
 }
 
 } // namespace ui

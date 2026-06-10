@@ -53,23 +53,5 @@ void WindowManager::ForwardMousePressedEvent(QMouseEvent *event) {
   }
 }
 
-void WindowManager::RegisterWindowSizeObserver(
-    render::IWindowSizeObserver *observer) {
-  sizeObservers.push_back(observer);
-}
-
-void WindowManager::UnregisterWindowSizeObserver(
-    render::IWindowSizeObserver *observer) {
-  sizeObservers.erase(
-      std::remove(sizeObservers.begin(), sizeObservers.end(), observer),
-      sizeObservers.end());
-}
-
-void WindowManager::NotifyWindowSizeChanged(int width, int height) {
-  for (auto *observer : sizeObservers) {
-    observer->OnWindowSizeChanged(width, height);
-  }
-}
-
 } // namespace ui
 } // namespace velopraEngine
