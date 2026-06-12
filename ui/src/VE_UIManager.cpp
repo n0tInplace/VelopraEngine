@@ -13,6 +13,8 @@ UIManager::UIManager(int argc, char *argv[], RenderType renderType,
   mainWindow.show();
 }
 
+UIManager::~UIManager() = default;
+
 int UIManager::Run() { return app.exec(); }
 
 } // namespace ui

@@ -35,5 +35,7 @@ MainWindow::MainWindow(QWidget *parent,
   VELOPRA_CORE_INFO("QT Main window created");
 }
 
+MainWindow::~MainWindow() = default;
+
 } // namespace ui
 } // namespace velopraEngine

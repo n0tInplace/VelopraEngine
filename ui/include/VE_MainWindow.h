@@ -18,6 +18,7 @@ public:
   MainWindow(QWidget *parent = nullptr,
              std::shared_ptr<WindowManager> windowManager = nullptr,
              std::unique_ptr<IRenderWidget> rW = nullptr);
+  ~MainWindow();
 
 private:
   std::unique_ptr<IRenderWidget> renderWidget;
