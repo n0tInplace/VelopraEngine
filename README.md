@@ -114,7 +114,12 @@ Configure and build with the preset for your platform:
 
 Each platform also has a `-release` variant. The first configure compiles Qt and Assimp from source via vcpkg and can take a while; later configures reuse vcpkg's binary cache.
 
-**Note for macOS:** make sure a compiler toolchain, CMake, and pkg-config are available: `xcode-select --install` and `brew install cmake pkg-config`. (`setup.sh` checks for these and tells you what's missing.)
+**Note for macOS:** make sure a compiler toolchain and the build tools are available:
+```bash
+xcode-select --install
+brew install cmake pkg-config autoconf autoconf-archive automake libtool ninja
+```
+`setup.sh` checks for these and tells you what's missing.
 
 **Note for Linux:** building Qt through vcpkg requires X11 development headers. On Debian/Ubuntu: `sudo apt install build-essential cmake libgl1-mesa-dev libxi-dev libxext-dev libx11-dev libxrandr-dev libxrender-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libfreetype6-dev`.
 

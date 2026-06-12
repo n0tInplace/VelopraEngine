@@ -15,6 +15,7 @@ class VELOPRAUI_API UIManager {
 public:
   UIManager(int argc, char *argv[], RenderType renderType,
             std::shared_ptr<WindowManager> windowManager);
+  ~UIManager();
   int Run();
 
 private:

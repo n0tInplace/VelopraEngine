@@ -7,9 +7,9 @@ set(INPUT_SOURCE_FILES
     src/VE_InputUpdateLayer.cpp
 )
 set(INPUT_HEADER_FILES
-    include/VE_InputAPI.h
     include/VE_InputEventGenerator.h
-    include/VE_inputTypes.h
+    include/VE_InputTypes.h
+    include/VE_InputAPI.h
     include/VE_InputUpdateLayer.h
 )
 
