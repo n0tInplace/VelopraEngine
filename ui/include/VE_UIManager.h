@@ -1,14 +1,16 @@
 #ifndef VE_UI_MANAGER_H
 #define VE_UI_MANAGER_H
 
-#include "VE_MainWindow.h"
 #include "VE_UIApi.h"
 #include "VE_RenderTypes.h"
-#include <QApplication>
+#include <memory>
+
+class QApplication;
 
 namespace velopraEngine {
 namespace ui {
 
+class MainWindow;
 class WindowManager;
 
 class VELOPRAUI_API UIManager {
@@ -19,8 +21,9 @@ public:
   int Run();
 
 private:
-  QApplication app;
-  MainWindow mainWindow;
+  int storedArgc;
+  std::unique_ptr<QApplication> app;
+  std::unique_ptr<MainWindow> mainWindow;
 };
 
 } // namespace ui
