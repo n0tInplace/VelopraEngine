@@ -2,6 +2,7 @@
 #include "VE_Core.h"
 #include "VE_LoggerMacros.h"
 #include "VE_SceneDescription.h"
+#include <QCoreApplication>
 #include <QTimer>
 
 namespace velopraEngine {
@@ -32,7 +33,13 @@ QtOpenGLWidget::~QtOpenGLWidget() {}
 // the interface carries the real behaviour.
 
 void QtOpenGLWidget::InitializeRenderer() {
-  if (renderer && !renderer->Initialize(render::SceneDescription{})) {
+  std::string assetDir =
+      QCoreApplication::applicationDirPath().toStdString() + "/";
+  render::SceneDescription scene;
+  scene.modelPath          = assetDir + "model.obj";
+  scene.vertexShaderPath   = assetDir + "vertex_shader.glsl";
+  scene.fragmentShaderPath = assetDir + "fragment_shader.glsl";
+  if (renderer && !renderer->Initialize(scene)) {
     VELOPRA_CORE_CRITICAL(
         "Renderer initialization failed; rendering disabled.");
     renderer.reset();
