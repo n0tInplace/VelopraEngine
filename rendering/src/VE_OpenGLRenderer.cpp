@@ -199,7 +199,7 @@ void OpenGLRenderer::UpdateProjectionMatrix(int width, int height) {
   // Projection conventions are backend-specific (GL clip depth is [-1,1]),
   // so each renderer builds its own projection behind its seam.
   projectionMatrix =
-      glm::perspective(glm::radians(90.0f), aspectRatio, 0.1f, 100.0f);
+      glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
   glViewport(0, 0, width, height);
 }
 
