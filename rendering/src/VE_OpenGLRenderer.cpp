@@ -141,11 +141,6 @@ void OpenGLRenderer::RenderFrame() {
   glEnable(GL_DEPTH_TEST);
 
   shader->Bind();
-  if (!shader->ValidateProgram()) {
-    VELOPRA_CORE_ERROR("Shader program validation failed.");
-    return;
-  }
-
   shader->SetUniformMat4f("u_Model", model->GetTransform().GetModelMatrix());
   shader->SetUniformMat4f("u_View", camera->GetViewMatrix());
   shader->SetUniformMat4f("u_Projection", projectionMatrix);
