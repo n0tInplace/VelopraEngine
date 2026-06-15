@@ -1,6 +1,7 @@
 #ifndef VE_IRENDERER_H
 #define VE_IRENDERER_H
 
+#include "VE_ICamera.h"
 #include "VE_RendererAPI.h"
 #include "VE_SceneDescription.h"
 
@@ -17,6 +18,8 @@ public:
   virtual void BeginFrame() = 0;
   virtual void RenderFrame() = 0;
   virtual void OnWindowSizeChanged(int width, int height) = 0;
+  virtual void OnCameraMove(Camera_Movement dir, float deltaTime) = 0;
+  virtual void OnCameraRotate(float xOffset, float yOffset) = 0;
 };
 
 } // namespace render

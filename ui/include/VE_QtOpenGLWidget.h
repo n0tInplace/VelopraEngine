@@ -30,6 +30,7 @@ public:
   void keyPressEvent(QKeyEvent *event) override;
   void keyReleaseEvent(QKeyEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
 
 protected:
@@ -40,6 +41,10 @@ protected:
 private:
   std::shared_ptr<render::IRenderer> renderer;
   std::shared_ptr<WindowManager> windowManager;
+
+  bool wDown = false, aDown = false, sDown = false, dDown = false;
+  bool rightMouseDown = false;
+  float lastMouseX = 0.0f, lastMouseY = 0.0f;
 };
 
 } // namespace ui
