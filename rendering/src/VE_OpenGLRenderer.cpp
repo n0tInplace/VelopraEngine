@@ -196,8 +196,15 @@ OpenGLRenderer::LoadTexture(const std::string &filePath) {
 }
 
 void OpenGLRenderer::OnWindowSizeChanged(int width, int height) {
-  // Handle window size change, e.g., update projection matrix
   UpdateProjectionMatrix(width, height);
+}
+
+void OpenGLRenderer::OnCameraMove(Camera_Movement dir, float deltaTime) {
+  if (camera) camera->ProcessKeyboard(dir, deltaTime);
+}
+
+void OpenGLRenderer::OnCameraRotate(float xOffset, float yOffset) {
+  if (camera) camera->ProcessMouseMovement(xOffset, yOffset);
 }
 
 void OpenGLRenderer::UpdateProjectionMatrix(int width, int height) {

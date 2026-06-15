@@ -26,6 +26,8 @@ public:
   void BeginFrame() override;
   void RenderFrame() override;
   void OnWindowSizeChanged(int width, int height) override;
+  void OnCameraMove(Camera_Movement dir, float deltaTime) override;
+  void OnCameraRotate(float xOffset, float yOffset) override;
 
   std::shared_ptr<ITexture> LoadTexture(const std::string &filePath) override;
 
