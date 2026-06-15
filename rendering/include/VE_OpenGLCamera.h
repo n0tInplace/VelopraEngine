@@ -16,6 +16,7 @@ public:
                float pitch = 0.0f);
 
   core::Matrix4 GetViewMatrix() override;
+  core::Vector3 GetPosition() const override;
   void ProcessKeyboard(Camera_Movement direction, float deltaTime) override;
   void ProcessMouseMovement(float xoffset, float yoffset,
                             bool constrainPitch = true) override;

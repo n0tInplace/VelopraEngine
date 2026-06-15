@@ -13,6 +13,7 @@ public:
   virtual ~ICamera() = default;
 
   virtual core::Matrix4 GetViewMatrix() = 0;
+  virtual core::Vector3 GetPosition() const = 0;
   virtual void ProcessKeyboard(Camera_Movement direction, float deltaTime) = 0;
   virtual void ProcessMouseMovement(float xoffset, float yoffset,
                                     bool constrainPitch = true) = 0;

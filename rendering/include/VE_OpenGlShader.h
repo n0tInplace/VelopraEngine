@@ -18,6 +18,7 @@ public:
 
   void SetUniform1i(const std::string &name, int value) override;
   void SetUniform1f(const std::string &name, float value) override;
+  void SetUniform3f(const std::string &name, float v0, float v1, float v2) override;
   void SetUniform4f(const std::string &name, float v0, float v1, float v2,
                     float v3) override;
   void SetUniformMat4f(const std::string &name,
