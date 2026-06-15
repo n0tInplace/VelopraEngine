@@ -125,6 +125,21 @@ brew install cmake pkg-config autoconf autoconf-archive automake libtool ninja
 
 **Note for Windows:** Visual Studio 2022 with the "Desktop development with C++" workload is required (the presets use its generator).
 
+## Running the Application
+
+After a successful build the executable and its assets (shaders + model) are placed together in the build output directory. Run from there so the application can find the files:
+
+| Platform | Command |
+|---|---|
+| macOS (debug) | `./out/build/macos-debug/application/VelopraEngine` |
+| macOS (release) | `./out/build/macos-release/application/VelopraEngine` |
+| Linux (debug) | `./out/build/linux-debug/application/VelopraEngine` |
+| Windows (debug) | `out\build\x64-debug\application\VelopraEngine.exe` |
+
+The engine opens a Qt window with the rendered scene in the centre panel. A 3D model is loaded from `example/model.obj` and shaded with Phong lighting (ambient + diffuse + specular). OpenGL 3.3 Core Profile is required — on macOS this is negotiated automatically.
+
+> **macOS note:** macOS may ask for permission to open an app from an unidentified developer. If the window does not appear, run `xattr -d com.apple.quarantine ./out/build/macos-debug/application/VelopraEngine` once to clear the quarantine flag.
+
 ## Contributing
 
 Contributions are currently closed but will open in the future as the engine evolves.
