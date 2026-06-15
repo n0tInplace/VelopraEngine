@@ -12,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace velopraEngine {
 namespace render {
@@ -36,7 +37,7 @@ public:
 private:
   std::unordered_map<std::string, std::shared_ptr<ITexture>> textureCache;
   std::unique_ptr<IShader> shader;
-  std::unique_ptr<IModel> model;
+  std::vector<std::unique_ptr<IModel>> models;
   std::unique_ptr<ICamera> camera;
   core::Matrix4 projectionMatrix;
   float aspectRatio;

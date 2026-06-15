@@ -3,16 +3,21 @@
 
 #include "VE_Math.h"
 #include <string>
+#include <vector>
 
 namespace velopraEngine {
 namespace render {
 
+struct SceneObject {
+  std::string modelPath;
+  core::Vector3 position = core::Vector3(0.0f, 0.0f, 0.0f);
+};
+
 struct SceneDescription {
-  std::string modelPath          = "model.obj";
+  std::vector<SceneObject> objects;
   std::string vertexShaderPath   = "vertex_shader.glsl";
   std::string fragmentShaderPath = "fragment_shader.glsl";
   core::Vector3 cameraPosition   = core::Vector3(0.0f, 0.0f, 3.0f);
-  core::Vector3 modelPosition    = core::Vector3(0.0f, 0.0f, 0.0f);
   int initialWidth               = 800;
   int initialHeight              = 600;
 };

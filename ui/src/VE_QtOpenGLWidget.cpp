@@ -49,10 +49,16 @@ QtOpenGLWidget::~QtOpenGLWidget() {}
 void QtOpenGLWidget::InitializeRenderer() {
   std::string assetDir =
       QCoreApplication::applicationDirPath().toStdString() + "/";
+  std::string modelPath = assetDir + "model.obj";
   render::SceneDescription scene;
-  scene.modelPath          = assetDir + "model.obj";
   scene.vertexShaderPath   = assetDir + "vertex_shader.glsl";
   scene.fragmentShaderPath = assetDir + "fragment_shader.glsl";
+  scene.cameraPosition     = core::Vector3(0.0f, 0.0f, 8.0f);
+  scene.objects = {
+      {modelPath, core::Vector3(-2.5f, 0.0f, 0.0f)},
+      {modelPath, core::Vector3( 0.0f, 0.0f, 0.0f)},
+      {modelPath, core::Vector3( 2.5f, 0.0f, 0.0f)},
+  };
   if (renderer && !renderer->Initialize(scene)) {
     VELOPRA_CORE_CRITICAL(
         "Renderer initialization failed; rendering disabled.");

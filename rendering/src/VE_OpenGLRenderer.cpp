@@ -96,7 +96,7 @@ namespace velopraEngine {
 namespace render {
 
 OpenGLRenderer::OpenGLRenderer()
-    : shader(nullptr), model(nullptr), camera(nullptr), aspectRatio(1.0f),
+    : shader(nullptr), camera(nullptr), aspectRatio(1.0f),
       projectionMatrix(1.0f) {}
 
 bool OpenGLRenderer::Initialize(const SceneDescription &scene) {
@@ -109,12 +109,20 @@ bool OpenGLRenderer::Initialize(const SceneDescription &scene) {
   camera = std::make_unique<OpenGLCamera>(scene.cameraPosition);
 
   ModelLoader loader;
-  auto meshData = loader.Load(scene.modelPath);
-  if (meshData.empty()) {
-    VELOPRA_CORE_ERROR("No geometry loaded from model: {}", scene.modelPath);
+  for (const auto &obj : scene.objects) {
+    auto meshData = loader.Load(obj.modelPath);
+    if (meshData.empty()) {
+      VELOPRA_CORE_ERROR("No geometry loaded from model: {}", obj.modelPath);
+      continue;
+    }
+    auto m = std::make_unique<OpenGLModel>(meshData, *this);
+    m->GetTransform().SetPosition(obj.position);
+    models.push_back(std::move(m));
+  }
+  if (models.empty()) {
+    VELOPRA_CORE_ERROR("No models loaded; check scene objects list.");
     return false;
   }
-  model = std::make_unique<OpenGLModel>(meshData, *this);
 
   shader = std::make_unique<OpenGLShader>(scene.vertexShaderPath,
                                           scene.fragmentShaderPath);
@@ -123,8 +131,6 @@ bool OpenGLRenderer::Initialize(const SceneDescription &scene) {
                        scene.vertexShaderPath, scene.fragmentShaderPath);
     return false;
   }
-
-  model->GetTransform().SetPosition(scene.modelPosition);
 
   UpdateProjectionMatrix(scene.initialWidth, scene.initialHeight);
   VELOPRA_CORE_INFO("OpenGL Renderer initialized successfully.");
@@ -141,7 +147,6 @@ void OpenGLRenderer::RenderFrame() {
   glEnable(GL_DEPTH_TEST);
 
   shader->Bind();
-  shader->SetUniformMat4f("u_Model", model->GetTransform().GetModelMatrix());
   shader->SetUniformMat4f("u_View", camera->GetViewMatrix());
   shader->SetUniformMat4f("u_Projection", projectionMatrix);
 
@@ -151,7 +156,10 @@ void OpenGLRenderer::RenderFrame() {
   auto camPos = camera->GetPosition();
   shader->SetUniform3f("u_ViewPos", camPos.x, camPos.y, camPos.z);
 
-  model->Draw();
+  for (const auto &m : models) {
+    shader->SetUniformMat4f("u_Model", m->GetTransform().GetModelMatrix());
+    m->Draw();
+  }
   shader->Unbind();
 }
 
