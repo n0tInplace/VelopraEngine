@@ -14,6 +14,8 @@ OpenGLCamera::OpenGLCamera(glm::vec3 position, glm::vec3 up, float yaw,
   updateCameraVectors();
 }
 
+core::Vector3 OpenGLCamera::GetPosition() const { return Position; }
+
 core::Matrix4 OpenGLCamera::GetViewMatrix() {
   return glm::lookAt(Position, Position + Front, Up);
 }

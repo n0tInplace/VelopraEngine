@@ -145,6 +145,12 @@ void OpenGLRenderer::RenderFrame() {
   shader->SetUniformMat4f("u_View", camera->GetViewMatrix());
   shader->SetUniformMat4f("u_Projection", projectionMatrix);
 
+  shader->SetUniform3f("u_LightPos",    5.0f, 5.0f, 5.0f);
+  shader->SetUniform3f("u_LightColor",  1.0f, 1.0f, 1.0f);
+  shader->SetUniform3f("u_ObjectColor", 1.0f, 0.5f, 0.2f);
+  auto camPos = camera->GetPosition();
+  shader->SetUniform3f("u_ViewPos", camPos.x, camPos.y, camPos.z);
+
   model->Draw();
   shader->Unbind();
 }
